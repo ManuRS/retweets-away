@@ -59,14 +59,15 @@ def filters(row, date):
 	if row[column_rt]!='': 
 		return False
 
-	# To be done: Included and not included should be without url in the text
+	# Included and not included works better without url in the text
+	tw_txt = clean_tweet(row[column_tw])
 
 	# Included words filter
 	aux=True
 	if len(include)>0:
 		aux=False
 		for elem in include:
-			if row[column_tw].find(elem) != -1:
+			if tw_txt.find(elem) != -1:
 				aux=True
 				break
 	if aux==False:
@@ -75,10 +76,16 @@ def filters(row, date):
 	# Non included words filter
 	if len(ninclude)>0:
 		for elem in ninclude:
-			if row[column_tw].find(elem) != -1:
+			if tw_txt.find(elem) != -1:
 				return False
 	return True
 
+def clean_tweet(text):
+	result=''
+	for elem in text.split(' '):
+		if ('http' not in elem) and ('://' not in elem):
+			result+=elem+' '
+	return result
 
 ############
 # Main part
