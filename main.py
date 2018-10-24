@@ -28,6 +28,8 @@ line = '\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
 ap = argparse.ArgumentParser()
 ap.add_argument('-u', '--user', type=str, required=True, help='nickname', default='')
 ap.add_argument('-d', '--date', type=str, required=False, help='yyyy-mm-dd', default='')
+ap.add_argument('-rt', '--retweet', action='store_true', help='Turn ')
+ap.add_argument('-og', '--originaltw', action='store_false', default=True)
 ap.add_argument('-i', '--include', nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
 ap.add_argument('-ni','--ninclude', nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
 
@@ -36,6 +38,8 @@ user = args["user"]
 date = args["date"]
 include = args["include"]
 ninclude = args["ninclude"]
+rt_on = args["retweet"]
+org_on = args["originaltw"]
 
 date_on=True if date!='' else False
 
@@ -56,7 +60,11 @@ def filters(row, date):
 		return False
 
 	# RT filter
-	if row[column_rt]!='': 
+	if row[column_rt]!='' and rt_on==False: 
+		return False
+
+	# Original tweet filter
+	if row[column_rt]=='' and org_on==False:
 		return False
 
 	# Included and not included works better without url in the text
@@ -129,10 +137,12 @@ txt += '\nNew file route     = ' + file_new + '\n'
 print(GREEN + txt)
 f.write(txt + '\n')
 
-txt  = 'user      = ' + user
-txt += '\ndate      = ' + date
-txt += '\ninclude   = ' + str(include)
-txt += '\nninclude  = ' + str(ninclude) + '\n'
+txt  = 'user           = ' + user
+txt += '\nshow own tw  = ' + str(org_on)
+txt += '\nshow rt tw   = ' + str(rt_on)
+txt += '\ndate         = ' + date
+txt += '\ninclude      = ' + str(include)
+txt += '\nninclude     = ' + str(ninclude) + '\n'
 
 print(RED + txt)
 f.write(txt + '\n')
