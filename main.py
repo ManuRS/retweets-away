@@ -26,11 +26,13 @@ line = '\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
 # Parser
 ############
 ap = argparse.ArgumentParser()
-ap.add_argument('-u', '--user', type=str, required=True, help='nickname', default='')
+ap.add_argument('-u', '--user', type=str, required=True,  help='nickname',   default='')
 ap.add_argument('-d', '--date', type=str, required=False, help='yyyy-mm-dd', default='')
-ap.add_argument('-rt', '--retweet', action='store_true', help='Turn ')
-ap.add_argument('-og', '--originaltw', action='store_false', default=True)
-ap.add_argument('-i', '--include', nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
+
+ap.add_argument('-rt', '--retweet',    action='store_true',  help='Turn rt tweets on',        default=False)
+ap.add_argument('-og', '--originaltw', action='store_false', help='Turn original tweets off', default=True)
+
+ap.add_argument('-i', '--include',  nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
 ap.add_argument('-ni','--ninclude', nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
 
 args = vars(ap.parse_args())
