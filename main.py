@@ -22,15 +22,25 @@ RESET  = '\033[0m'
 
 line = '\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
 
+help_txt  = 'Created to delete re-tweets from a csv twitter archive\n'
+help_txt += 'Now you can also filter by date or words\n'
+url  = 'https://github.com/manurs/retweets-away\n'
+
 ############
 # Parser
 ############
-ap = argparse.ArgumentParser()
+help_txt_2  = '\n - User name is mandatory\n'
+help_txt_2 += ' - Date filter: yyyy-mm-dd, yyyy-mm and yyyy options are availables\n'
+help_txt_2 += ' - RT-tweets filter is on by default, use -rt to take into account RT-tweets\n'
+help_txt_2 += ' - User-tweets are take into account by default, use -og to activate the User-tweets filter\n'
+help_txt_2 += ' - Include/not include filters accept a list of words. E.g.: -i green red'
+
+ap = argparse.ArgumentParser(description=GREEN+help_txt+BLUE+url+RED+help_txt_2+RESET, formatter_class=argparse.RawTextHelpFormatter)
 ap.add_argument('-u', '--user', type=str, required=True,  help='nickname',   default='')
 ap.add_argument('-d', '--date', type=str, required=False, help='yyyy-mm-dd', default='')
 
-ap.add_argument('-rt', '--retweet',    action='store_true',  help='Turn rt tweets on',        default=False)
-ap.add_argument('-og', '--originaltw', action='store_false', help='Turn original tweets off', default=True)
+ap.add_argument('-rt', '--retweet',    action='store_true',  help='Do not filter RT-tweets',        default=False)
+ap.add_argument('-og', '--originaltw', action='store_false', help='Filter User-tweets', default=True)
 
 ap.add_argument('-i', '--include',  nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
 ap.add_argument('-ni','--ninclude', nargs='+', default=[], type=str, required=False, help='str1 str2 etc')
@@ -132,36 +142,32 @@ for row in spamreader:
 ############
 # Final text
 ############
-txt  = 'Reading from       = ' + file
-txt += '\nBackup file route  = ' + file_all
-txt += '\nNew file route     = ' + file_new + '\n'
+txt  = ' - Reading from       = ' + file
+txt += '\n - Backup file route  = ' + file_all
+txt += '\n - New file route     = ' + file_new + '\n'
 
 print(GREEN + txt)
 f.write(txt + '\n')
 
-txt  = 'user           = ' + user
-txt += '\nshow own tw  = ' + str(org_on)
-txt += '\nshow rt tw   = ' + str(rt_on)
-txt += '\ndate         = ' + date
-txt += '\ninclude      = ' + str(include)
-txt += '\nninclude     = ' + str(ninclude) + '\n'
+txt  = ' - user         = ' + user
+txt += '\n - show own tw  = ' + str(org_on)
+txt += '\n - show rt tw   = ' + str(rt_on)
+txt += '\n - date         = ' + date
+txt += '\n - include      = ' + str(include)
+txt += '\n - ninclude     = ' + str(ninclude) + '\n'
 
 print(RED + txt)
 f.write(txt + '\n')
 
-txt  = 'Total # of tweets (with RT)  = ' + str(counter)
-txt += '\nFiltered tweets              = ' + str(counter_org)
-txt += '\nFiltered tweets %            = {0:.2f}%\n'.format(counter_org*100/counter)
+txt  = ' - Total # of tweets (with RT)  = ' + str(counter)
+txt += '\n - Filtered tweets              = ' + str(counter_org)
+txt += '\n - Filtered tweets %            = {0:.2f}%\n'.format(counter_org*100/counter)
 
 print(GREEN + txt)
 f.write(txt + '\n')
 
-txt  = 'Created to delete re-tweets from a csv twitter archive'
-txt += '\nNow you can also filter by date or words'
-url  = '\nhttps://github.com/manurs/retweets-away\n'
-
-print(RESET + txt + BLUE + url + RESET)
-f.write(txt + url)
+print(RESET + help_txt + BLUE + url + RESET)
+f.write(help_txt + url)
 
 ############
 # Close
